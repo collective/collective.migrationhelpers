@@ -1,12 +1,15 @@
-.. This README is meant for consumption by humans and pypi. Pypi can render rst files so please do not use Sphinx features.
-   If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide.html
-   This text does not appear on pypi or github. It is a comment.
-
 ===========================
 collective.migrationhelpers
 ===========================
 
-Some helpers and examples to use during migrations
+Some helpers and examples to use during migrations.
+
+They are mostly meant to copy & paste the code from here to your own packages.
+
+This was written for the talk "Migrations! Migrations! Migrations!" at Plone Conference 2019 in Ferrara: https://2019.ploneconf.org/talks/migrations-migrations-migrations
+
+
+Here is a list of methods this package contains:
 
 
 statistics.py
@@ -226,10 +229,9 @@ Example for some maybe sensible registry-settings for migrated sites.
 Installation
 ------------
 
-It is not rally tested for installation but might be possible.
-Instead you could copy/paste the code from here to your own packages.
+This is mostly meant to copy&paste the code from here to your own packages.
 
-Install collective.migrationhelpers by adding it to your buildout::
+Installation is still possible: To install it add it to your buildout::
 
     [buildout]
 
