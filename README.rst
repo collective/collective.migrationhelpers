@@ -91,8 +91,8 @@ cleanup_behaviors
     Example that removes p4a.subtyper utilities
 
 
-persistent_utilities_adapaters_and_subscribers.py
--------------------------------------------------
+persistent.py
+-------------
 
 Some examples that remove various adapters, subscriber and utilities.
 
@@ -131,8 +131,8 @@ dexterity.py
 Methods to migrate default content to Dexterity.
 
 
-custom_at_to_dx_migration.py
-----------------------------
+custom_dx_migration.py
+----------------------
 
 A example that migrated PloneHelpCenter to default Dexterity content.
 
