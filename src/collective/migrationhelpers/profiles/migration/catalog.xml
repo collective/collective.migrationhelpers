@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<object name="portal_catalog">
+
+  <!-- Remove custom indexes -->
+  <index name="area" remove="True"/>
+
+  <!-- Remove custom metadata -->
+  <column value="area" remove="True"/>
+
+</object>

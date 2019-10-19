@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<object name="portal_actions">
+
+ <!-- Remove obsolete actions from addons -->
+ <object name="object_buttons" meta_type="CMF Action Category">
+  <object name="export" meta_type="CMF Action" remove="true"></object>
+  <object name="import" meta_type="CMF Action" remove="true"></object>
+ </object>
+
+ <!-- Fix login-button not using a modal -->
+ <object name="user" meta_type="CMF Action Category">
+  <object name="login" meta_type="CMF Action" i18n:domain="plone">
+   <property name="modal" type="text">{"prependContent": ".portalMessage", "title": "Log in", "width": "26em", "actionOptions": {"redirectOnResponse": true}}</property>
+  </object>
+ </object>
+</object>

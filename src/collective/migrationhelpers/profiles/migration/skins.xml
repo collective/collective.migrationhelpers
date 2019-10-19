@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<object name="portal_skins">
+ <skin-path name="*">
+  <layer name="PloneFormGen" remove="true" />
+  <layer name="LinguaPlone" remove="true" />
+ </skin-path>
+
+ <object remove="true" name="LinguaPlone" meta_type="Filesystem Directory View" directory="Products.LinguaPlone:skins/LinguaPlone" />
+
+</object>

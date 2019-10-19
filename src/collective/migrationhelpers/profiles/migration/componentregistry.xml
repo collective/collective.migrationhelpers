@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<componentregistry>
+
+ <adapters/>
+
+ <utilities>
+
+  <utility
+    remove="True"
+    interface="collective.easyslideshow.descriptors.SlideshowDescriptor"
+    name="collective.easyslideshow.slideshow"/>
+
+  <utility
+     remove="true"
+     interface="plone.i18n.locales.interfaces.IContentLanguageAvailability"
+     factory="Products.LinguaPlone.vocabulary.SyncedLanguages"/>
+
+  <utility
+     remove="true"
+     interface="plone.i18n.locales.interfaces.IMetadataLanguageAvailability"
+     factory="Products.LinguaPlone.vocabulary.SyncedLanguages"/>
+
+ </utilities>
+
+</componentregistry>

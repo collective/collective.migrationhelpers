@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registry xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+          i18n:domain="plone">
+
+  <record name="plone.site_title">
+    <value>Site Title</value>
+  </record>
+
+  <record name="plone.navigation_depth">
+    <value>3</value>
+  </record>
+
+  <record name="plone.show_excluded_items">
+    <value>False</value>
+  </record>
+
+  <record name="plone.enable_sitemap">
+    <value>True</value>
+  </record>
+
+  <record name="plone.exposeDCMetaTags">
+    <value>True</value>
+  </record>
+
+  <record name="plone.icon_visibility">
+    <value>false</value>
+  </record>
+
+  <record name="plone.mark_special_links">
+    <value>False</value>
+  </record>
+
+  <record name="plone.enable_livesearch">
+    <value>True</value>
+  </record>
+
+  <record name="plone.types_not_searched">
+    <value>
+      <element>TempFolder</element>
+      <element>Plone Site</element>
+      <element>Collection</element>
+      <element>Image</element>
+      <element>Discussion Item</element>
+      <element>Link</element>
+    </value>
+  </record>
+
+  <record name="plone.formats"
+          interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema"
+          field="formats">
+    <value>{
+"discreet": { "inline": "span", "classes": "discreet" },
+"clearfix": { "block": "div", "classes": "clearfix" },
+"underline": { "inline": "span", "classes": "underline", "exact": "true"}
+}
+    </value>
+  </record>
+
+</registry>

@@ -1,0 +1,56 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+<!-- These are example profiles. Pick and choose for you own profiles
+     instead of installing...
+
+  <genericsetup:registerProfile
+      name="default"
+      title="collective.migrationhelpers"
+      directory="profiles/default"
+      description="Installs the collective.migrationhelpers add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
+      />
+
+  <genericsetup:registerProfile
+      name="migration"
+      title="collective.migrationhelpers (migration)"
+      directory="profiles/migration"
+      description="Helpers the collective.migrationhelpers add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.uninstall"
+      />
+ -->
+
+  <browser:page
+      name="migrations_stats"
+      for="*"
+      class=".statistics.Stats"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="migrations_contentsize"
+      for="*"
+      class=".statistics.ContentSize"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="migrations_obsoleteinfo"
+      for="*"
+      class=".statistics.ObsoleteInfo"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="migrations_localroles"
+      for="*"
+      class=".statistics.ExportLocalRoles"
+      permission="cmf.ManagePortal"
+      />
+
+</configure>

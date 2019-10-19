@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tool-setup>
+  <forbidden tool_id="portal_popoll" />
+  <forbidden tool_id="portal_relations" />
+  <forbidden tool_id="formgen_tool" />
+</tool-setup>

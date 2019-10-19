@@ -1,0 +1,20 @@
+<layers>
+
+  <!-- remove all kinds of browserlayers -->
+  <layer name="webcouturier.dropdownmenu"
+         interface="webcouturier.dropdownmenu.browser.interfaces.IDropdownSpecific"
+         remove="true" />
+  <layer name="collective.portletclass"
+         interface="collective.portletclass.interfaces.ICollectivePortletClassLayer"
+         remove="true" />
+  <layer name="collective.weightedportlets"
+         interface="collective.weightedportlets.interfaces.IProductLayer"
+         remove="true" />
+  <layer name="starzel.firstitem"
+         interface="starzel.firstitem.interfaces.IFirstItemLayer"
+         remove="true" />
+  <layer name="collective.z3cform.widgets"
+         interface="collective.z3cform.widgets.interfaces.ILayer"
+         remove="true"/>
+
+</layers>

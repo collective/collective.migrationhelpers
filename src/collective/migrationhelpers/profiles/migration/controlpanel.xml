@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<object name="portal_controlpanel">
+
+ <!-- remove outdated configlets -->
+ <configlet
+    action_id="PloneFormGen"
+    appId="PloneFormGen"
+    remove="true" />
+ <configlet
+    action_id="DropdownConfiguration"
+    appId="DropdownConfiguration"
+    remove="true" />
+ <configlet
+    action_id="plonetruegallery"
+    appId="plonetruegallery"
+    remove="true" />
+ <configlet
+    action_id="transmogrifier"
+    appId="None"
+    remove="true" />
+ <configlet
+    action_id="Logbook"
+    appId="LogbookControlPanel"
+    remove="true" />
+ <configlet
+    action_id="MemberPassword"
+    appId="Plone"
+    remove="true" />
+ <configlet
+    action_id="MemberPrefs"
+    appId="Plone"
+    remove="true" />
+ <configlet
+    action_id="Maintenance"
+    appId="Plone"
+    remove="true" />
+ <configlet
+    action_id="plone.app.event.eventsettings"
+    appId="plone.app.event"
+    remove="true" />
+
+
+</object>
