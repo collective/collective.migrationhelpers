@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 from plone import api
 from zExceptions import BadRequest
+from zope.lifecycleevent import modified
 
 import logging
-import transaction
 
 log = logging.getLogger(__name__)
 
@@ -52,11 +52,12 @@ def remove_solgema_fullcalendar(context=None):
     qi = api.portal.get_tool('portal_quickinstaller')
     log.info('removing Solgema.fullcalendar')
     if qi.isProductInstalled('Solgema.fullcalendar'):
-        DEFAULT_CASCADE = (
+        # do not remove types
+        cascade = (
             'skins', 'actions', 'portalobjects', 'workflows', 'slots',
             'registrypredicates', 'adapters', 'utilities',
         )
-        qi.uninstallProducts(['Solgema.fullcalendar'], cascade=DEFAULT_CASCADE)
+        qi.uninstallProducts(['Solgema.fullcalendar'], cascade=cascade)
 
 
 def remove_multiple_addons(context=None):
@@ -103,11 +104,12 @@ def remove_multiple_addons(context=None):
     for brain in portal_catalog.searchResults(portal_type='Folder'):
         obj = brain.getObject()
         if getattr(obj.aq_base, 'layout', None) == 'firstitem_view':
-            setattr(obj, 'layout', '')
+            obj.manage_delProperties(['layout'])
+            modified(obj)
     if qi.isProductInstalled('starzel.firstitem'):
         qi.uninstallProducts(['starzel.firstitem'])
     if getattr(portal, 'layout', None) == 'firstitem_view':
-        setattr(portal, 'layout', '')
+        portal.manage_delProperties(['layout'])
 
     try:
         portal_properties.manage_delObjects(['cli_properties'])

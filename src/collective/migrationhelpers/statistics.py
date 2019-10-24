@@ -10,8 +10,7 @@ log = logging.getLogger(__name__)
 
 
 class Stats(BrowserView):
-    """Get info about the content is in the portal.
-
+    """Get info about the content in the portal.
     """
 
     EARLIEST_YEAR = 2001
@@ -21,13 +20,12 @@ class Stats(BrowserView):
         portal_types = api.portal.get_tool('portal_types')
         catalog = api.portal.get_tool('portal_catalog')
         results = {}
+        log.info(u'\n\nNumber of items by portal_type\n')
         for portal_type in portal_types:
             brains = catalog.unrestrictedSearchResults(portal_type=portal_type)
             results[portal_type] = len(brains)
-
         for k, v in sorted(results.items(), key=itemgetter(1), reverse=True):
             log.info('{}: {}'.format(k, v))
-
         results = {}
         all_children = portal.contentItems()
         for i in all_children:
@@ -36,10 +34,10 @@ class Stats(BrowserView):
             objects_in_path = len(catalog.unrestrictedSearchResults(
                 path={'query': path}))
             results[path] = objects_in_path
-
+        log.info(u'\n\nNumber of items by folder\n')
         for k, v in sorted(results.items(), key=itemgetter(1), reverse=True):
             log.info('{}: {}'.format(k, v))
-
+        log.info(u'\n\nNumber of items by type and year\n')
         years = range(self.EARLIEST_YEAR, 2020)
         frequent_types = [
             'Event',
@@ -60,7 +58,7 @@ class Stats(BrowserView):
                     len(catalog.unrestrictedSearchResults(
                         modified=modified, portal_type=content_type))
                 ))
-
+        log.info(u'\n\nVery large items\n')
         results = {}
         for brain in catalog.unrestrictedSearchResults(
                 portal_type=['File', 'Image']):
@@ -70,11 +68,8 @@ class Stats(BrowserView):
                 if size > 10:
                     results[brain.getPath()] = size
 
-        for size in sorted(results, key=itemgetter(1), reverse=True):
-            log.info(u'{} MB {}'.format(
-                results[size],
-                size,
-                ))
+        for item in sorted(results.items(), key=itemgetter(1), reverse=True):
+            log.info(u'{} MB {}'.format(item[1], item[0]))
         return u'Done'
 
 
@@ -124,7 +119,6 @@ class ContentSize(BrowserView):
 class ObsoleteInfo(BrowserView):
     """Get info about content-types that may needs to be replaced
     """
-
     OBSOLETE_TYPES = ['FormFolder', 'HelpCenter', 'Collage', 'CalendarXFolder']
 
     def __call__(self):
@@ -139,7 +133,7 @@ class ObsoleteInfo(BrowserView):
                 path = brain.getPath()
                 items = catalog.unrestrictedSearchResults(
                     path=path, sort_on='modified', sort_order='descending')
-                log.info('{} (modified {}) contains {} items. Newest item from {}'.format(
+                log.info('{} (modified {}) contains {} items. Newest from {}'.format(
                     path, brain.modified.year(), len(items), items[0].modified.year()))
         return 'Done'
 

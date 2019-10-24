@@ -21,7 +21,6 @@ def disable_solr(context=None):
 
 
 def disable_ldap(context=None):
-    # disable ldap
     names_of_ldap_plugins = [
         'ldap_ad_mp',
         'adplugin',
