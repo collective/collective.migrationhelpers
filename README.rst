@@ -152,6 +152,13 @@ migrate_helpcenter_xxx
     Some Methods that migrate the various types in PHC
 
 
+custom_dx_migration2.py
+-----------------------
+
+migrate_ploneformgen
+    A example on how to struture a migration from PloneFormGen to collective.easyform.
+
+
 archetypes.py
 -------------
 
