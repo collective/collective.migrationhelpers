@@ -52,7 +52,8 @@ def migrate_folders(context=None):
 def migrate_files(context=None):
     portal = api.portal.get()
     request = getRequest()
-    pac_migration = api.content.get_view('migrate_from_atct', portal, request)
+    pac_migration = api.content.get_view(
+        'migrate_from_atct', portal, request)
     content_types = ['BlobFile', 'File']
     pac_migration(
         migrate=True,

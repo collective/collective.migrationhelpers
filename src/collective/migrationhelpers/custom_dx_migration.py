@@ -26,7 +26,7 @@ def migrate_helpcenter_to_dx(context=None):
     migrate_helpcenterreferencemanualfolder()
     migrate_helpcentertutorialfolder()
 
-    # then items
+    # migrate items
     migrate_helpcenterhowto()
     migrate_helpcenterleafpage()
     migrate_helpcenterfaq()
@@ -62,8 +62,6 @@ def change_phc_layouts(context=None):
 
 def appending_richtext_migrator(src_obj, dst_obj, src_fieldname, dst_fieldname):
     """Append text to a existing Richtext Value (if it exists).
-
-    Use it to merge multiple RichText-Fields into one.
     """
     field = src_obj.getField(src_fieldname)
     if not field:
@@ -76,9 +74,10 @@ def appending_richtext_migrator(src_obj, dst_obj, src_fieldname, dst_fieldname):
     if existing_value and existing_value.raw:
         heading = u'<h2>{0}</h2>'.format(src_fieldname)
         value = existing_value.raw + heading + value
-
     value = RichTextValue(
-        raw=value, mimeType='text/html', outputMimeType='text/x-html-safe')
+        raw=value,
+        mimeType='text/html',
+        outputMimeType='text/x-html-safe')
     setattr(dst_obj, dst_fieldname, value)
 
 
@@ -102,7 +101,7 @@ def appending_text_migrator(src_obj, dst_obj, src_fieldname, dst_fieldname):
     setattr(dst_obj, dst_fieldname, value)
 
 
-def migrate_helpcenter():
+def migrate_helpcenter(context=None):
     fields_mapping = (
         {'AT_field_name': 'rights',
          'DX_field_name': 'text',
@@ -115,7 +114,7 @@ def migrate_helpcenter():
         dst_type='Folder')
 
 
-def migrate_helpcenterfaqfolder():
+def migrate_helpcenterfaqfolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterFAQFolder...')
     migrateCustomAT(
@@ -125,7 +124,7 @@ def migrate_helpcenterfaqfolder():
     )
 
 
-def migrate_helpcenterhowtofolder():
+def migrate_helpcenterhowtofolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterHowToFolder...')
     migrateCustomAT(
@@ -135,7 +134,7 @@ def migrate_helpcenterhowtofolder():
     )
 
 
-def migrate_helpcentererrorreferencefolder():
+def migrate_helpcentererrorreferencefolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterErrorReferenceFolder...')
     migrateCustomAT(
@@ -145,7 +144,7 @@ def migrate_helpcentererrorreferencefolder():
         )
 
 
-def migrate_helpcenterinstructionalvideofolder():
+def migrate_helpcenterinstructionalvideofolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterInstructionalVideoFolder...')
     migrateCustomAT(
@@ -155,7 +154,7 @@ def migrate_helpcenterinstructionalvideofolder():
         )
 
 
-def migrate_helpcenterlinkfolder():
+def migrate_helpcenterlinkfolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterLinkFolder...')
     migrateCustomAT(
@@ -165,7 +164,7 @@ def migrate_helpcenterlinkfolder():
         )
 
 
-def migrate_helpcenterreferencemanualfolder():
+def migrate_helpcenterreferencemanualfolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterManualFolder...')
     migrateCustomAT(
@@ -175,7 +174,7 @@ def migrate_helpcenterreferencemanualfolder():
         )
 
 
-def migrate_helpcentertutorialfolder():
+def migrate_helpcentertutorialfolder(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterTutorialFolder...')
     migrateCustomAT(
@@ -185,7 +184,7 @@ def migrate_helpcentertutorialfolder():
         )
 
 
-def migrate_helpcenterreferencemanual():
+def migrate_helpcenterreferencemanual(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterReferenceManual...')
     migrateCustomAT(
@@ -195,7 +194,7 @@ def migrate_helpcenterreferencemanual():
         )
 
 
-def migrate_helpcenterhowto():
+def migrate_helpcenterhowto(context=None):
     fields_mapping = (
         {'AT_field_name': 'text',
          'DX_field_name': 'text',
@@ -210,7 +209,7 @@ def migrate_helpcenterhowto():
     )
 
 
-def migrate_helpcenterreferencemanualsection():
+def migrate_helpcenterreferencemanualsection(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterReferencemanualsection...')
     migrateCustomAT(
@@ -220,7 +219,7 @@ def migrate_helpcenterreferencemanualsection():
         )
 
 
-def migrate_helpcenterknowledgebase():
+def migrate_helpcenterknowledgebase(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterKnowledgebase...')
     migrateCustomAT(
@@ -230,7 +229,7 @@ def migrate_helpcenterknowledgebase():
         )
 
 
-def migrate_helpcentertutorial():
+def migrate_helpcentertutorial(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterTutorial...')
     migrateCustomAT(
@@ -240,7 +239,7 @@ def migrate_helpcentertutorial():
         )
 
 
-def migrate_helpcenterfaq():
+def migrate_helpcenterfaq(context=None):
     fields_mapping = (
         {'AT_field_name': 'text',
          'DX_field_name': 'text',
@@ -255,7 +254,7 @@ def migrate_helpcenterfaq():
     )
 
 
-def migrate_helpcenterleafpage():
+def migrate_helpcenterleafpage(context=None):
     fields_mapping = (
         {'AT_field_name': 'text',
          'DX_field_name': 'text',
@@ -270,7 +269,7 @@ def migrate_helpcenterleafpage():
     )
 
 
-def migrate_helpcenterdefinition():
+def migrate_helpcenterdefinition(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterDefinition...')
     migrateCustomAT(
@@ -280,7 +279,7 @@ def migrate_helpcenterdefinition():
         )
 
 
-def migrate_helpcentererrorreference():
+def migrate_helpcentererrorreference(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterErrorReference...')
     migrateCustomAT(
@@ -290,7 +289,7 @@ def migrate_helpcentererrorreference():
         )
 
 
-def migrate_helpcenterglossary():
+def migrate_helpcenterglossary(context=None):
     fields_mapping = []
     log.info('Migrating HelpCenterGlossary...')
     migrateCustomAT(
@@ -300,7 +299,7 @@ def migrate_helpcenterglossary():
         )
 
 
-def migrate_helpcenterinstructionalvideo():
+def migrate_helpcenterinstructionalvideo(context=None):
     fields_mapping = (
         {'AT_field_name': 'video_file',
          'DX_field_name': 'file',
@@ -315,7 +314,7 @@ def migrate_helpcenterinstructionalvideo():
         )
 
 
-def migrate_helpcenterlink():
+def migrate_helpcenterlink(context=None):
     fields_mapping = (
         {'AT_field_name': 'url',
          'DX_field_name': 'remoteUrl'},
@@ -328,7 +327,7 @@ def migrate_helpcenterlink():
         )
 
 
-def migrate_helpcenterreferencemanualpage():
+def migrate_helpcenterreferencemanualpage(context=None):
     fields_mapping = (
         {'AT_field_name': 'text',
          'DX_field_name': 'text',
@@ -343,7 +342,7 @@ def migrate_helpcenterreferencemanualpage():
         )
 
 
-def migrate_helpcentertutorialpage():
+def migrate_helpcentertutorialpage(context=None):
     fields_mapping = (
         {'AT_field_name': 'text',
          'DX_field_name': 'text',
