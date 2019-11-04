@@ -62,6 +62,9 @@ remove_all_revisions
 disable_theme
     Disable diazo theme, enable suburst (useful for Plone 4)
 
+trim_content
+    Remove 95% of all content leaving at least one item for each type.
+    Keep all folderish items unless specified.
 
 
 addons.py

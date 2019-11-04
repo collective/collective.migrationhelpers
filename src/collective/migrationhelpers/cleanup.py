@@ -2,6 +2,7 @@
 from plone import api
 
 import logging
+import transaction
 
 log = logging.getLogger(__name__)
 
@@ -48,3 +49,55 @@ def disable_theme(context=None):
     portal_skins.default_skin = 'Sunburst Theme'
     if THEME_NAME in portal_skins.getSkinSelections():
         portal_skins.manage_skinLayers([THEME_NAME], del_skin=True)
+
+
+def trim_content(
+    context=None, percent=95, types_to_keep=None, folderish_types_to_delete=None
+):
+    """Remove 95% of all content leaving at least one item for each.
+    Keep all folderish items unless they are specified
+
+    Deleting a lot of content takes time:
+    * Plone can delete about 8 items per second (folderish itmes take longer)
+    * Deleting 500 items takes 1 minute.
+    * Deleting 10.000 item takes 20 minutes.
+    """
+    if not types_to_keep:
+        types_to_keep = ['Folder', 'Discussion Item']
+    if not folderish_types_to_delete:
+        folderish_types_to_delete = ['FormFolder', 'HelpCenter', 'Collage']
+
+    portal_types = api.portal.get_tool('portal_types')
+    for portal_type in portal_types:
+        if types_to_keep and portal_type in types_to_keep:
+            log.info(u'Keeping items of type {}'.format(portal_type))
+            continue
+
+        brains = api.content.find(portal_type=portal_type)
+        total_amount = len(brains)
+        if total_amount == 0:
+            continue
+        amount_to_delete = float(percent) / 100 * total_amount
+        amount_to_delete = int(amount_to_delete)
+        if amount_to_delete >= total_amount:
+            amount_to_delete = total_amount - 1
+
+        log.info(u'Deleting {} {}'.format(amount_to_delete, portal_type))
+        for index, brain in enumerate(brains):
+            if index >= amount_to_delete:
+                log.info(u'Done deleting {} {}'.format(index, portal_type))
+                break
+            if brain.is_folderish and portal_type not in folderish_types_to_delete:
+                log.info(u'Not deleting folderish type {}!'.format(portal_type))
+                break
+            obj = brain.getObject()
+            try:
+                api.content.delete(obj, check_linkintegrity=False)
+            except Exception as e:
+                log.info(e)
+            if index and not index % 100:
+                log.info(u'Deleted {} {} ...'.format(index, portal_type))
+        log.info(u'Committing...')
+        transaction.commit()
+    log.info(u'Finished!')
+    return u'Finished!'
