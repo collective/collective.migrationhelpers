@@ -169,7 +169,7 @@ def migrate_helpcenterreferencemanualfolder(context=None):
     log.info('Migrating HelpCenterManualFolder...')
     migrateCustomAT(
         fields_mapping,
-        src_type='HelpCenterManualFolder',
+        src_type='HelpCenterReferenceManualFolder',
         dst_type='Folder',
         )
 
@@ -214,7 +214,7 @@ def migrate_helpcenterreferencemanualsection(context=None):
     log.info('Migrating HelpCenterReferencemanualsection...')
     migrateCustomAT(
         fields_mapping,
-        src_type='HelpCenterReferencemanualsection',
+        src_type='HelpCenterReferenceManualSection',
         dst_type='Folder',
         )
 
