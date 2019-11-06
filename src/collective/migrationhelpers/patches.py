@@ -16,6 +16,10 @@ class IBBB(Interface):
     pass
 
 
+class BBB(object):
+    pass
+
+
 UITool = SimpleItem
 SlideshowDescriptor = SimpleItem
 ClickmapTool = SimpleItem
@@ -105,3 +109,15 @@ try:
     IPortalTypedFolderishDescriptor  # noqa
 except ImportError:
     alias_module('p4a.subtyper.interfaces.IPortalTypedFolderishDescriptor', IBBB)  # noqa: E501
+
+try:
+    from collective.solr import interfaces
+    interfaces  # noqa
+except ImportError:
+    alias_module('collective.solr.indexer.SolrIndexProcessor', BBB)
+    alias_module('collective.solr.manager.SolrConnectionManager', BBB)
+    alias_module('collective.solr.search.Search', BBB)
+    alias_module('collective.solr.interfaces.ISolrIndexQueueProcessor', IBBB)
+    alias_module('collective.solr.interfaces.ISolrConnectionManager', IBBB)
+    alias_module('collective.solr.interfaces.ISearch', IBBB)
+    alias_module('collective.solr.interfaces.ISolrSchema', IBBB)
