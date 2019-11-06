@@ -44,58 +44,55 @@ try:
     from collective.zipfiletransport.utilities.interfaces import IZipFileTransportUtility
     IZipFileTransportUtility  # noqa
 except ImportError:
-    alias_module('collective.zipfiletransport.utilities.interfaces.IZipFileTransportUtility', IBBB)  # noqa: E501
-
+    alias_module(
+        'collective.zipfiletransport.utilities.interfaces.IZipFileTransportUtility',
+        IBBB)
 
 try:
     from collective.z3cform.widgets.interfaces import ILayer
     ILayer  # noqa
 except ImportError:
-    alias_module('collective.z3cform.widgets.interfaces.ILayer', IBBB)  # noqa: E501
-
+    alias_module('collective.z3cform.widgets.interfaces.ILayer', IBBB)
 
 try:
     from App.interfaces import IPersistentExtra
     IPersistentExtra  # noqa
 except ImportError:
-    alias_module('App.interfaces.IPersistentExtra', IBBB)  # noqa: E501
-
+    alias_module('App.interfaces.IPersistentExtra', IBBB)
 
 try:
     from plone.app.stagingbehavior.relation import StagingRelationValue
     StagingRelationValue  # noqa
 except ImportError:
     from z3c.relationfield.relation import RelationValue
-    alias_module('plone.app.stagingbehavior.relation.StagingRelationValue', RelationValue)  # noqa: E501
-
+    alias_module('plone.app.stagingbehavior.relation.StagingRelationValue',
+                 RelationValue)
 
 try:
     from webdav.interfaces import IFTPAccess
     IFTPAccess  # noqa
 except ImportError:
-    alias_module('webdav.interfaces.IFTPAccess', IBBB)  # noqa: E501
-
+    alias_module('webdav.interfaces.IFTPAccess', IBBB)
 
 try:
     from plone.app.event.dx.behaviors import FakeZone
     FakeZone  # noqa
 except ImportError:
-    alias_module('plone.app.event.dx.behaviors.FakeZone', DummyFakeZone)  # noqa: E501
-
+    alias_module('plone.app.event.dx.behaviors.FakeZone', DummyFakeZone)
 
 try:
     from collective.easyslideshow.descriptors import SlideshowDescriptor
     SlideshowDescriptor  # noqa
 except ImportError:
-    alias_module('collective.easyslideshow.descriptors.SlideshowDescriptor', SlideshowDescriptor)  # noqa: E501
-
+    alias_module('collective.easyslideshow.descriptors.SlideshowDescriptor',
+                 SlideshowDescriptor)
 
 try:
     from zettwerk.clickmap.ClickmapTool import ClickmapTool
     ClickmapTool  # noqa
 except ImportError:
-    alias_module('zettwerk.clickmap.ClickmapTool.ClickmapTool', SlideshowDescriptor)  # noqa: E501
-
+    alias_module('zettwerk.clickmap.ClickmapTool.ClickmapTool',
+                 SlideshowDescriptor)
 
 try:
     from zettwerk.ui.tool.tool import UITool
@@ -103,12 +100,12 @@ try:
 except ImportError:
     alias_module('zettwerk.ui.tool.tool.UITool', UITool)
 
-
 try:
     from p4a.subtyper.interfaces import IPortalTypedFolderishDescriptor
     IPortalTypedFolderishDescriptor  # noqa
 except ImportError:
-    alias_module('p4a.subtyper.interfaces.IPortalTypedFolderishDescriptor', IBBB)  # noqa: E501
+    alias_module('p4a.subtyper.interfaces.IPortalTypedFolderishDescriptor',
+                 IBBB)
 
 try:
     from collective.solr import interfaces
