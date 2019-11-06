@@ -58,9 +58,14 @@ def trim_content(
     Keep all folderish items unless they are specified
 
     Deleting a lot of content takes time:
-    * Plone can delete about 8 items per second (folderish itmes take longer)
-    * Deleting 500 items takes 1 minute.
-    * Deleting 10.000 item takes 20 minutes.
+    * Plone can delete between 8 and 80 items per second (it depends...)
+    * Deleting 500 items can take between 5 seconds and 1 minute.
+    * Deleting 10.000 items can take 20 minutes.
+
+    Deleting gets slower over time so when you need to delete more than
+    10.000 item you should consider deleting them in batches.
+
+    Never ever run this in production unless you need a new job.
     """
     if not types_to_keep:
         types_to_keep = ['Folder', 'Discussion Item']
@@ -96,7 +101,10 @@ def trim_content(
             except Exception as e:
                 log.info(e)
             if index and not index % 100:
-                log.info(u'Deleted {} {} ...'.format(index, portal_type))
+                log.info(u'Deleting portal_type {}: {} ...'.format(portal_type, index))
+            if index and not index % 1000:
+                log.info(u'Creating transaction savepoint...')
+                transaction.savepoint()
         log.info(u'Committing...')
         transaction.commit()
     log.info(u'Finished!')
