@@ -49,3 +49,15 @@ def remove_overrides(context=None):
     for name in view_customizations.keys():
         view_customizations.manage_delObjects([name])
         log.info(u'Removed portal_view_customizations item {}'.format(name))
+
+
+def release_all_webdav_locks(context=None):
+    from Products.CMFPlone.utils import base_hasattr
+    portal = api.portal.get()
+
+    def unlock(obj, path):
+        if base_hasattr(obj, 'wl_isLocked') and obj.wl_isLocked():
+            obj.wl_clearLocks()
+            log.info(u'Unlocked {}'.format(path))
+
+    portal.ZopeFindAndApply(portal, search_sub=True, apply_func=unlock)

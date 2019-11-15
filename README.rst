@@ -46,6 +46,8 @@ Prepare the portal for a migration
 `remove_overrides`
     Remove any portal_skin an portal_view_customization overrides.
 
+`release_all_webdav_locks`
+    Release all WebDAV Locks.
 
 
 cleanup.py
