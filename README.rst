@@ -62,7 +62,7 @@ remove_all_revisions
     Clear out portal_historiesstorage
 
 disable_theme
-    Disable diazo theme, enable suburst (useful for Plone 4)
+    Disable diazo theme, enable sunburst (useful for Plone 4)
 
 trim_content
     Remove 95% of all content leaving at least one item for each type.
