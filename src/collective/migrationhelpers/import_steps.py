@@ -23,7 +23,7 @@ def remove_broken_steps_manually(context=None):
     broken_import_steps = [
         'collective.z3cform.datetimewidget',
         'languagetool',
-        'pleonformgen',
+        'ploneformgen',
         'redirectiontool_various',
         'solgemacontextualcontentmenu',
         'solgemafullcalendarinstall',
