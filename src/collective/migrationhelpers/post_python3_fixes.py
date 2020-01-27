@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from ComputedAttribute import ComputedAttribute
 from plone import api
-from plone.app.portlets.portlets.navigation import Renderer
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import IPortletManager
-from plone.portlets.interfaces import IPortletRenderer
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
@@ -56,20 +54,28 @@ def fix_portlets(context=None):
     """Fix navigation_portlet (has ComputedValue for portal instead of a UUID)
     """
     catalog = api.portal.get_tool('portal_catalog')
+    portal = api.portal.get()
+    fix_portlets_for(portal)
     for brain in catalog.getAllBrains():
         try:
             obj = brain.getObject()
         except KeyError:
             log.info('Broken brain for {}'.format(brain.getPath()))
-        fix_navigation_portlet_for(obj)
-    portal = api.portal.get()
-    fix_navigation_portlet_for(portal)
+            continue
+        fix_portlets_for(obj)
 
 
-def fix_navigation_portlet_for(obj):
-    request = getRequest()
-    view = obj.restrictedTraverse('@@view')
-    for manager_name in ['plone.leftcolumn', 'plone.rightcolumn']:
+def fix_portlets_for(obj):
+    attrs_to_fix = [
+        'root_uid',
+        'search_base_uid',
+        'uid',
+    ]
+    if getattr(obj.aq_base, 'getLayout', None) is not None and obj.getLayout() is not None:
+        view = obj.restrictedTraverse(obj.getLayout())
+    else:
+        view = obj.restrictedTraverse('@@view')
+    for manager_name in ['plone.leftcolumn', 'plone.rightcolumn', 'plone.footerportlets']:
         manager = queryUtility(IPortletManager, name=manager_name, context=obj)
         if not manager:
             continue
@@ -77,12 +83,8 @@ def fix_navigation_portlet_for(obj):
         if not mappings:
             continue
         for key, assignment in mappings.items():
-            renderer = queryMultiAdapter(
-                (obj, request, view, manager, assignment), IPortletRenderer)
-            if not renderer:
-                continue
-            if isinstance(renderer, Renderer) and isinstance(assignment.root_uid, ComputedAttribute):  # noqa: E501:
-                # We have a navigation-portlet!
-                assignment.root_uid = None
-                log.info('Reset root of navigation-portlet assigned at {} in {}'.format(obj.absolute_url(), manager_name))  # noqa: E501
-                log.info('You may need to configure it manually at {}/manage-portlets'.format(obj.absolute_url()))  # noqa: E501
+            for attr in attrs_to_fix:
+                if getattr(assignment, attr, None) is not None and isinstance(getattr(assignment, attr), ComputedAttribute):
+                    setattr(assignment, attr, None)
+                    log.info('Reset {} for portlet {} assigned at {} in {}'.format(attr, key, obj.absolute_url(), manager_name))  # noqa: E501
+                    log.info('You may need to configure it manually at {}/@@manage-portlets'.format(obj.absolute_url()))  # noqa: E501
