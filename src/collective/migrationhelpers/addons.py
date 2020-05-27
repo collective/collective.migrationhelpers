@@ -8,7 +8,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def remove_ploneformgen(context=None):
+def remove_ploneformgen(context=None, check_linkintegrity=True):
     portal = api.portal.get()
     portal_types = api.portal.get_tool('portal_types')
     portal_catalog = api.portal.get_tool('portal_catalog')
@@ -20,9 +20,10 @@ def remove_ploneformgen(context=None):
     ]
     old_types = [i for i in old_types if i in portal_types]
     for old_type in old_types:
+        log.info(u'Deleting Existing Instances of {}!'.format(old_type))
         for brain in portal_catalog(portal_type=old_type):
-            log.info(u'Deleting Existing Instances of {}!'.format(old_type))
-            api.content.delete(brain.getObject(), check_linkintegrity=True)
+            log.info(u'Removing {}!'.format(brain.getPath()))
+            api.content.delete(brain.getObject(), check_linkintegrity=check_linkintegrity)  # noqa: E501
     try:
         portal.manage_delObjects(['formgen_tool'])
     except AttributeError:
