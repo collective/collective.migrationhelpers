@@ -12,45 +12,45 @@ This was written for the talk "Migrations! Migrations! Migrations!" at Plone Con
 Here is a list of methods this package contains:
 
 
-statistics.py
+`statistics.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/statistics.py>`_
 -------------
 
 Browser-Views to get information about the portal:
 
 
-`migrations_stats`
+migrations_stats
     Get info about the content is in the portal.
 
-`migrations_contentsize`
+migrations_contentsize
     How many MB of which content is there really?
 
-`migrations_obsoleteinfo`
+migrations_obsoleteinfo
     Get info about content-types that may needs to be replaced
 
-`migrations_localroles`
+migrations_localroles
     Export info about local roles. A alternative would be zopyx.plone.cassandra
 
 
 
-prepare.py
+`prepare.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/prepare.py>`_
 ----------
 
 Prepare the portal for a migration
 
-`disable_solr`
+disable_solr
     Disable solr
 
-`disable_ldap`
+disable_ldap
     Disable ldap/ad-plugins
 
-`remove_overrides`
+remove_overrides
     Remove any portal_skin an portal_view_customization overrides.
 
-`release_all_webdav_locks`
+release_all_webdav_locks
     Release all WebDAV Locks.
 
 
-cleanup.py
+`cleanup.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/cleanup.py>`_
 ----------
 
 Fremove obsolete content and settings
@@ -69,7 +69,7 @@ trim_content
     Keep all folderish items unless specified.
 
 
-addons.py
+`addons.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/addons.py>`_
 ---------
 
 Remove addons
@@ -89,14 +89,14 @@ remove_multiple_addons
 cleanup_behaviors
     Remove obsolete behaviors
 
-`_unregisterUtility`
+_unregisterUtility
     Example that removes p4a.subtyper utilities (used in collective.easyslideshow)
 
-`remove_vocabularies`
+remove_vocabularies
     Example that removes p4a.subtyper utilities
 
 
-persistent.py
+`persistent.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/persistent.py>`_
 -------------
 
 Some examples that remove various adapters, subscriber and utilities.
@@ -108,13 +108,13 @@ See also:
 * wildcard.fixpersistentutilities
 
 
-import_steps.py
+`import_steps.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/import_steps.py>`_
 ---------------
 
 Remove broken and outdated import/export steps
 
 
-linguaplone.py
+`linguaplone.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/linguaplone.py>`_
 --------------
 
 Examples that can help migrating from LinguaPlone to plone.app.multilingual
@@ -130,13 +130,13 @@ migrate_to_pam
     This mostly uses the migration that is builtin in plone.app.multilingual
 
 
-dexterity.py
+`dexterity.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/dexterity.py>`_
 ------------
 
 Methods to migrate default content to Dexterity.
 
 
-custom_dx_migration.py
+`custom_dx_migration.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/custom_dx_migration.py>`_
 ----------------------
 
 A example that migrated PloneHelpCenter to default Dexterity content.
@@ -157,14 +157,14 @@ migrate_helpcenter_xxx
     Some Methods that migrate the various types in PHC
 
 
-custom_dx_migration2.py
+`custom_dx_migration2.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/custom_dx_migration2.py>`_
 -----------------------
 
 migrate_ploneformgen
     A example on how to struture a migration from PloneFormGen to collective.easyform.
 
 
-archetypes.py
+`archetypes.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/archetypes.py>`_
 -------------
 
 remove_archetypes
@@ -172,13 +172,13 @@ remove_archetypes
 
 
 
-patches.py
+`patches.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/patches.py>`_
 ----------
 
 Multilple examples of patches using alias_module to deal with migration-problems.
 
 
-images.py
+`images.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/images.py>`_
 ---------
 
 fix_at_image_scales
@@ -186,7 +186,7 @@ fix_at_image_scales
 
 
 
-post_python3_fixes.py
+`post_python3_fixes.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/post_python3_fixes.py>`_
 ---------------------
 
 fix_event_indexes
@@ -198,14 +198,35 @@ fix_searchable_text
 fix_portlets
     Fix navigation_portlet (has ComputedValue for portal instead of a UUID)
 
+rebuild_relations
+    Exports all valid reations from the relation-catalog, purges the relation-catalog
+    (and the intid-catalog) and restores all valid relations.
+    Uses `collective.relationhelpers  <https://github.com/collective/collective.relationhelpers>`_
 
-finalize.py
+export_relations
+    Export all relations as a json file all_relations.json in you buildout directory.
+    Uses `collective.relationhelpers  <https://github.com/collective/collective.relationhelpers>`_
+
+restore_relations
+    Recreate relations from a annotation on the portal or a list of dicts
+    (e.g. restored from the json-file created by export_relations).
+    This works fine for all kinds of relations, RelationList- or RelationChoice-fields
+    (including the default field "Related Items") as well as for linkintegrity-relations
+    and relations between working-copies.
+    Uses `collective.relationhelpers  <https://github.com/collective/collective.relationhelpers>`_
+
+cleanup_intids
+    Purge all RelationValues and all references to broken objects from the IntId catalog.
+    Uses `collective.relationhelpers  <https://github.com/collective/collective.relationhelpers>`_
+
+
+`finalize.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/finalize.py>`_
 -----------
 
 Example method for final touces after migrating to 5.2 with py3
 
 
-utils.py
+`utils.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/utils.py>`_
 --------
 
 disable_subscriber
