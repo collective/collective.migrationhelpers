@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 from ComputedAttribute import ComputedAttribute
 from plone import api
-from persistent.list import PersistentList
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import IPortletManager
-from zc.relation.interfaces import ICatalog
-from zope.annotation.interfaces import IAnnotations
-from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
-from zope.intid.interfaces import IIntIds
 from zope.lifecycleevent import modified
-from z3c.relationfield import RelationValue
 
 import logging
 
@@ -58,7 +52,7 @@ def fix_searchable_text(context=None):
 
 
 def fix_portlets(context=None):
-    """Fix navigation_portlet (has ComputedValue for portal instead of a UUID)
+    """Fix portlets that use ComputedValue for path-storage instead of a UUID.
     """
     catalog = api.portal.get_tool('portal_catalog')
     portal = api.portal.get()
@@ -73,6 +67,7 @@ def fix_portlets(context=None):
 
 
 def fix_portlets_for(obj):
+    """Fix portlets for a certain object."""
     attrs_to_fix = [
         'root_uid',
         'search_base_uid',
@@ -97,23 +92,9 @@ def fix_portlets_for(obj):
                     log.info('You may need to configure it manually at {}/@@manage-portlets'.format(obj.absolute_url()))  # noqa: E501
 
 
-def get_all_relations():
-    portal = api.portal.get()
-    results = []
-
-    # Get all data from relation_catalog
-    relation_catalog = getUtility(ICatalog)
-    for rel in relation_catalog.findRelations():
-        if rel.from_object and rel.to_object:
-            results.append({
-                'from_uuid': rel.from_object.UID(),
-                'to_uuid': rel.to_object.UID(),
-                'relationship': rel.from_attribute,
-            })
-    return results
-
-
 def rebuild_relations(context=None):
+    """Export all valid reations from the relation-catalog, purge the relation-catalog
+    (and cleanup the intid-catalog) and restores all valid relations."""
     from collective.relationhelpers import api as relapi
     relapi.rebuild_relations()
 
