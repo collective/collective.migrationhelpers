@@ -196,7 +196,7 @@ fix_searchable_text
     Fix bytes in opkapiindex
 
 fix_portlets
-    Fix navigation_portlet (has ComputedValue for portal instead of a UUID)
+    Fix portlets that use a ComputedValue for path-storage instead of a UUID
 
 rebuild_relations
     Exports all valid reations from the relation-catalog, purges the relation-catalog
