@@ -74,7 +74,10 @@ def fix_portlets_for(obj):
         'uid',
     ]
     if getattr(obj.aq_base, 'getLayout', None) is not None and obj.getLayout() is not None:
-        view = obj.restrictedTraverse(obj.getLayout())
+        try:
+            view = obj.restrictedTraverse(obj.getLayout())
+        except KeyError:
+            view = obj.restrictedTraverse('@@view')
     else:
         view = obj.restrictedTraverse('@@view')
     for manager_name in ['plone.leftcolumn', 'plone.rightcolumn', 'plone.footerportlets']:
