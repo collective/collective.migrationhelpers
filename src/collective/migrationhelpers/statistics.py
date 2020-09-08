@@ -10,13 +10,13 @@ log = logging.getLogger(__name__)
 
 
 class Stats(BrowserView):
-    """Get info about the content in the portal.
+    """Get info about the content in the portal or the current context.
     """
 
     EARLIEST_YEAR = 2001
 
     def __call__(self):
-        portal = api.portal.get()
+        context = self.context
         portal_types = api.portal.get_tool('portal_types')
         catalog = api.portal.get_tool('portal_catalog')
         results = {}
@@ -27,7 +27,7 @@ class Stats(BrowserView):
         for k, v in sorted(results.items(), key=itemgetter(1), reverse=True):
             log.info('{}: {}'.format(k, v))
         results = {}
-        all_children = portal.contentItems()
+        all_children = context.contentItems()
         for i in all_children:
             path = i[1].getPhysicalPath()
             path = '/'.join(path)
@@ -41,6 +41,7 @@ class Stats(BrowserView):
         years = range(self.EARLIEST_YEAR, 2020)
         frequent_types = [
             'Event',
+            'News Item',
             'File',
             'Folder',
             'Document',
