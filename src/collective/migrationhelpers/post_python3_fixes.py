@@ -6,7 +6,6 @@ from plone.portlets.interfaces import IPortletManager
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
-from zope.lifecycleevent import modified
 
 import logging
 
@@ -73,13 +72,6 @@ def fix_portlets_for(obj):
         'search_base_uid',
         'uid',
     ]
-    if getattr(obj.aq_base, 'getLayout', None) is not None and obj.getLayout() is not None:
-        try:
-            view = obj.restrictedTraverse(obj.getLayout())
-        except KeyError:
-            view = obj.restrictedTraverse('@@view')
-    else:
-        view = obj.restrictedTraverse('@@view')
     for manager_name in ['plone.leftcolumn', 'plone.rightcolumn', 'plone.footerportlets']:
         manager = queryUtility(IPortletManager, name=manager_name, context=obj)
         if not manager:
@@ -122,4 +114,3 @@ def cleanup_intids(context=None):
     """Purge all RelationValues and all references to broken objects from the IntId catalog."""
     from collective.relationhelpers import api as relapi
     relapi.cleanup_intids()
-
