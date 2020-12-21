@@ -88,23 +88,33 @@ def trim_content(
             amount_to_delete = total_amount - 1
 
         log.info(u'Deleting {} {}'.format(amount_to_delete, portal_type))
+        # First get all brains.  If we start getting them lazily and meanwhile
+        # delete objects, we may run into a KeyError getting the next brain.
+        # Okay, this does not help in my case, but seems good anyway.
+        brains = list(brains)[:amount_to_delete]
         for index, brain in enumerate(brains):
-            if index >= amount_to_delete:
-                log.info(u'Done deleting {} {}'.format(index, portal_type))
-                break
             if brain.is_folderish and portal_type not in folderish_types_to_delete:
                 log.info(u'Not deleting folderish type {}!'.format(portal_type))
                 break
-            obj = brain.getObject()
             try:
-                api.content.delete(obj, check_linkintegrity=False)
+                obj = brain.getObject()
             except Exception as e:
+                # I have had this in one site, and not even brain.getPath worked.
+                # But I could get all objects as long as I was not busy deleting any.
                 log.info(e)
+                # log.warning(u'Not deleting portal_type {} {} because getObject failed.'.format(portal_type, index))
+                # continue
+            else:
+                try:
+                    api.content.delete(obj, check_linkintegrity=False)
+                except Exception as e:
+                    log.info(e)
             if index and not index % 100:
                 log.info(u'Deleting portal_type {}: {} ...'.format(portal_type, index))
             if index and not index % 1000:
                 log.info(u'Creating transaction savepoint...')
                 transaction.savepoint()
+        log.info(u'Done deleting {} {}'.format(index, portal_type))
         log.info(u'Committing...')
         transaction.commit()
     log.info(u'Finished!')
