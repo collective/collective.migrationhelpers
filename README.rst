@@ -89,9 +89,6 @@ remove_multiple_addons
 cleanup_behaviors
     Remove obsolete behaviors
 
-_unregisterUtility
-    Example that removes p4a.subtyper utilities (used in collective.easyslideshow)
-
 remove_vocabularies
     Example that removes p4a.subtyper utilities
 
@@ -100,12 +97,25 @@ remove_vocabularies
 -------------
 
 Some examples that remove various adapters, subscriber and utilities.
+For example:
+
+remove_utility:
+    Remove an interface from all utility registrations.
+    There are several places where an interface like IKSSRegistry can have lodged itself.
+    We need to find them all, otherwise you are not even able to see
+    the ZMI when going to Plone 5.2.
+
+_unregisterUtility
+    Example that removes p4a.subtyper utilities (used in collective.easyslideshow)
+
+remove_kss
+    Example that removes portal_kss and removes IKSSRegistry from four places in the site manager.
 
 See also:
 
-* Use alias_module (see `patches.py`)
-* profiles/migration/componentregistry.xml
-* wildcard.fixpersistentutilities
+* Use alias_module (see `patches.py`_)
+* ``profiles/migration/componentregistry.xml``
+* `wildcard.fixpersistentutilities <https://pypi.org/project/wildcard.fixpersistentutilities/>`_
 
 
 `import_steps.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/import_steps.py>`_
