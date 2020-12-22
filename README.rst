@@ -102,6 +102,8 @@ For example:
 _unregisterUtility
     Example that removes p4a.subtyper utilities (used in collective.easyslideshow)
 
+remove_kss
+    Example that removes portal_kss and removes IKSSRegistry from four places in the site manager.
 
 See also:
 
