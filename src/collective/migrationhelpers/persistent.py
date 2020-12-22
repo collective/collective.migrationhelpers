@@ -7,51 +7,14 @@ import transaction
 log = logging.getLogger(__name__)
 
 
-def remove_utilities(context=None):
-    """Example that removes collective.zipfiletransport
-    """
-    portal = api.portal.get()
+def remove_utility(iface):
+    """Remove an interface from all utility registrations.
 
-    from collective.zipfiletransport.utilities.interfaces import IZipFileTransportUtility  # noqa: E501
-    sm = portal.getSiteManager()
-
-    if IZipFileTransportUtility in sm.utilities._subscribers[0]:
-        del sm.utilities._subscribers[0][IZipFileTransportUtility]
-        log.info(u'Unregistering subscriber for IZipFileTransportUtility')
-
-    if IZipFileTransportUtility in sm.utilities._adapters[0]:
-        del sm.utilities._adapters[0][IZipFileTransportUtility]
-        log.info(u'Unregistering adapter for IZipFileTransportUtility')
-
-    sm.utilities._p_changed = True
-    transaction.commit()
-
-
-def remove_kss(context=None):
-    """Example that removes portal_kss and related utilities
-
-    This code works for me when I run it in Plone 4.3,
-    on a site that originally started at Plone 3 (or maybe even earlier).
-
-    There are several places where IKSSRegistry can have lodged itself.
+    There are several places where an interface like IKSSRegistry can have lodged itself.
     We need to find them all, otherwise you are not even able to see
     the ZMI when going to Plone 5.2.
-
-    The same might be true for other utilities,
-    like the IZipFileTransportUtility above.
     """
-    try:
-        from Products.ResourceRegistries.interfaces import IKSSRegistry as iface
-    except ImportError:
-        iface = None
-
     portal = api.portal.get()
-    if 'portal_kss' in portal:
-        portal.manage_delObjects(['portal_kss'])
-        log.info(u'Removed portal_kss tool.')
-
-    if iface is None:
-        return
     sm = portal.getSiteManager()
 
     subscribers = sm.utilities._subscribers[0]
@@ -82,6 +45,39 @@ def remove_kss(context=None):
     transaction.commit()
 
 
+def remove_utilities(context=None):
+    """Example that removes collective.zipfiletransport
+    """
+    from collective.zipfiletransport.utilities.interfaces import IZipFileTransportUtility  # noqa: E501
+
+    remove_utility(IZipFileTransportUtility)
+
+
+def remove_kss(context=None):
+    """Example that removes portal_kss and related utilities
+
+    This code works for me when I run it in Plone 4.3,
+    on a site that originally started at Plone 3 (or maybe even earlier).
+
+    There are several places where IKSSRegistry can have lodged itself.
+    We need to find them all, otherwise you are not even able to see
+    the ZMI when going to Plone 5.2.
+
+    The same might be true for other utilities,
+    like the IZipFileTransportUtility above.
+    """
+    portal = api.portal.get()
+    if 'portal_kss' in portal:
+        portal.manage_delObjects(['portal_kss'])
+        log.info(u'Removed portal_kss tool.')
+
+    try:
+        from Products.ResourceRegistries.interfaces import IKSSRegistry
+    except ImportError:
+        return
+    remove_utility(IKSSRegistry)
+
+
 def _unregisterUtility(portal):
     """Example that removes p4a.subtyper
     """
@@ -99,8 +95,7 @@ def _unregisterUtility(portal):
             util,
             IPortalTypedFolderishDescriptor,
             name=u'collective.easyslideshow.slideshow')
-        if IPortalTypedFolderishDescriptor in sm.utilities._subscribers[0]:
-            del sm.utilities._subscribers[0][IPortalTypedFolderishDescriptor]
+        remove_utility(IPortalTypedFolderishDescriptor)
     # reuse code from collective.lineage
     try:
         from collective.lineage.upgrades import removeP4A

@@ -99,6 +99,12 @@ remove_vocabularies
 Some examples that remove various adapters, subscriber and utilities.
 For example:
 
+remove_utility:
+    Remove an interface from all utility registrations.
+    There are several places where an interface like IKSSRegistry can have lodged itself.
+    We need to find them all, otherwise you are not even able to see
+    the ZMI when going to Plone 5.2.
+
 _unregisterUtility
     Example that removes p4a.subtyper utilities (used in collective.easyslideshow)
 
