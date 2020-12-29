@@ -4,6 +4,13 @@ from zope.component import getGlobalSiteManager
 
 import logging
 
+# py2/3
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 log = logging.getLogger(__name__)
 
 
@@ -62,34 +69,35 @@ def pass_fn(*args, **kwargs):
 
 
 def patch_indexing_at_blobs():
-    from plone.app.blob.content import ATBlob
-    from Products.contentmigration.utils import patch
-    patch(ATBlob, 'getIndexValue', pass_fn)
+    try:
+        from plone.app.blob.content import ATBlob
+        patch(ATBlob, 'getIndexValue', pass_fn)
+    except ImportError:
+        pass
 
 
 def unpatch_indexing_at_blobs():
-    from Products.contentmigration.utils import undoPatch
-    from plone.app.blob.content import ATBlob
-    undoPatch(ATBlob, 'getIndexValue')
+    try:
+        from plone.app.blob.content import ATBlob
+        undoPatch(ATBlob, 'getIndexValue')
+    except ImportError:
+        pass
 
 
 def patch_indexing_dx_blobs():
-    from Products.contentmigration.utils import patch
     from Products.ZCTextIndex.ZCTextIndex import ZCTextIndex
-    # from plone.app.blob.content import ATBlob
     patch(ZCTextIndex, 'index_object', patched_index_object)
 
 
 def unpatch_indexing_dx_blobs():
-    from Products.contentmigration.utils import undoPatch
     from Products.ZCTextIndex.ZCTextIndex import ZCTextIndex
     undoPatch(ZCTextIndex, 'index_object')
 
 
 def patched_index_object(self, documentId, obj, threshold=None):
-    from plone.app.textfield.interfaces import TransformError
     from Products.PluginIndexes.common import safe_callable
     """Wrapper for  index_doc()  handling indexing of multiple attributes.
+
     Enter the document with the specified documentId in the index
     under the terms extracted from the indexed text attributes,
     each of which should yield either a string or a list of
@@ -106,11 +114,7 @@ def patched_index_object(self, documentId, obj, threshold=None):
 
     all_texts = []
     for attr in fields:
-        try:
-            text = getattr(obj, attr, None)
-        except TransformError as e:
-            log.warn('TransformError accessing {0} of {1}: {2}'.format(attr, obj.absolute_url_path(), e))  # noqa: E501
-            continue
+        text = getattr(obj, attr, None)
         if text is None:
             continue
         if safe_callable(text):
@@ -126,3 +130,21 @@ def patched_index_object(self, documentId, obj, threshold=None):
     if all_texts:
         return self.index.index_doc(documentId, all_texts)
     return 0
+
+
+def getSavedAttrName(attrName):
+    return '_old_%s' % attrName
+
+
+def patch(context, originalAttrName, replacement):
+    """ Default handler that preserves original method """
+    OLD_NAME = getSavedAttrName(originalAttrName)
+    if not hasattr(context, OLD_NAME):
+        setattr(context, OLD_NAME, getattr(context, originalAttrName))
+    setattr(context, originalAttrName, replacement)
+
+
+def undoPatch(context, originalAttrName):
+    OLD_NAME = getSavedAttrName(originalAttrName)
+    setattr(context, originalAttrName, getattr(context, OLD_NAME))
+    delattr(context, OLD_NAME)
