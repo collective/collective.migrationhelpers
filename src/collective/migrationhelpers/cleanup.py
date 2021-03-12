@@ -11,7 +11,7 @@ def delete_large_items(context=None, max_size=1):
     """Delete all items that are larger than 1 MB.
     """
     catalog = api.portal.get_tool('portal_catalog')
-    for brain in catalog(portal_type=['File', 'Image']):
+    for brain in catalog.unrestrictedSearchResults(portal_type=['File', 'Image']):
         size = brain.getObjSize
         if "MB" in size:
             size = float(size.split()[0])

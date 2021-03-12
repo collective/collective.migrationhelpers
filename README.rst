@@ -178,7 +178,7 @@ remove_archetypes
 `patches.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/patches.py>`_
 ----------
 
-Multilple examples of patches using alias_module to deal with migration-problems.
+Multiple examples of patches using alias_module to deal with migration-problems.
 
 
 `images.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/images.py>`_
@@ -186,6 +186,7 @@ Multilple examples of patches using alias_module to deal with migration-problems
 
 fix_at_image_scales
     Fix/Migrate custom images/scales and broken links to AT-based images.
+    This only finds content with the rich text behavior, so not all rich text fields.
 
 
 
