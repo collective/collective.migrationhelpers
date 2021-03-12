@@ -54,8 +54,8 @@ def fix_at_image_scales(context=None):
     catalog = api.portal.get_tool('portal_catalog')
     query = {}
     query['object_provides'] = 'plone.app.contenttypes.behaviors.richtext.IRichText'  # noqa: E501
-    results = catalog(**query)
-    log.info('There are {0} in total, stating migration...'.format(
+    results = catalog.unrestrictedSearchResults(**query)
+    log.info('There are {0} items with rich text behavior in total, starting migration...'.format(
         len(results)))
     for result in results:
         try:
