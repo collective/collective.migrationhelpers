@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from bs4 import BeautifulSoup
 from plone import api
 from plone.app.textfield.interfaces import IRichText
 from plone.app.textfield.value import RichTextValue
@@ -35,20 +36,48 @@ IMAGE_SCALE_MAP = {
 }
 
 
-def image_scale_fixer(text):
-    if text:
+def image_scale_fixer(text, obj):
+    if not text:
+        return
+    soup = BeautifulSoup(text, 'html.parser')
+    for img in soup.find_all('img'):
+        src = img['src']
+        if src.startswith('http'):
+            log.info('Skip external image {} used in {}'.format(src, obj.absolute_url()))
+            continue
+
         for old, new in IMAGE_SCALE_MAP.items():
             # replace plone.app.imaging old scale names with new ones
-            text = text.replace(
-                '@@images/image/{0}'.format(old),
-                '@@images/image/{0}'.format(new)
+            src = src.replace(
+                u'@@images/image/{}'.format(old),
+                u'@@images/image/{}'.format(new)
             )
             # replace AT traversing scales
-            text = text.replace(
-                '/image_{0}'.format(old),
-                '/@@images/image/{0}'.format(new)
+            src = src.replace(
+                u'/image_{}'.format(old),
+                u'/@@images/image/{}'.format(new)
             )
-    return text
+
+        if '/@@images/' in src:
+            scale = src.split('/@@images/image/')[-1]
+            if '/' in scale:
+                log.info(u'Invalid image-link in {}: {}'.format(obj.absolute_url(), src))
+            img['data-scale'] = scale
+        else:
+            # image not scaled
+            img['data-scale'] = ''
+
+        img['src'] = src
+        img['data-linktype'] = 'image'
+        img['class'] = ['image-richtext', 'image-inline']
+
+        if 'resolveuid' in src:
+            uuid = src.split('resolveuid/')[1].split('/')[0]
+            img['data-val'] = uuid
+        else:
+            log.info('Image-link without resolveuid in {}: {}'.format(obj.absolute_url(), src))
+
+    return soup.decode()
 
 
 def fix_at_image_scales(context=None):
@@ -78,7 +107,7 @@ def fix_at_image_scales(context=None):
                 text = getattr(obj.aq_base, name, None)
                 if not text:
                     continue
-                clean_text = image_scale_fixer(text.raw)
+                clean_text = image_scale_fixer(text.raw, obj)
                 if clean_text == text.raw:
                     continue
                 setattr(obj, name, RichTextValue(

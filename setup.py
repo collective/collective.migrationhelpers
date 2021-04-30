@@ -54,6 +54,7 @@ setup(
         'setuptools',
         # -*- Extra requirements: -*-
         'plone.api',
+        'beautifulsoup4',
     ],
     extras_require={
     },
