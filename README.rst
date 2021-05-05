@@ -239,6 +239,12 @@ disable_subscriber
 enable_subscriber
     Re-enable a subscriber
 
+disable_content_rules
+    Disable all content rules
+
+enable_content_rules
+    Re-enable all content rules
+
 example_with_disabled_subscriber
     Example to use the above
 
