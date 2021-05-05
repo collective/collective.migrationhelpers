@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from plone import api
-from zope.component import getGlobalSiteManager
+from plone.contentrules.engine.interfaces import IRuleStorage
+from zope.component import getGlobalSiteManager, getUtility
 
 import logging
 
@@ -42,6 +43,18 @@ def example_with_disabled_subscriber(context=None):
     # Do something here...
     enable_subscriber(
         modifiedContent, (IDexterityHasRelations, IObjectModifiedEvent))
+
+
+def disable_content_rules(context=None):
+    storage = getUtility(IRuleStorage)
+    for rule_id in storage.keys():
+        storage[rule_id].enabled = False
+
+
+def enable_content_rules(context=None):
+    storage = getUtility(IRuleStorage)
+    for rule_id in storage.keys():
+        storage[rule_id].enabled = True
 
 
 def rebuild_catalog_without_indexing_blobs(context=None):
