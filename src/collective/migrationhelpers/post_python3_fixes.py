@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from ComputedAttribute import ComputedAttribute
+from logging import getLogger
 from plone import api
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import IPortletManager
+from zope.annotation.interfaces import IAnnotations
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
@@ -85,6 +87,30 @@ def fix_portlets_for(obj):
                     setattr(assignment, attr, None)
                     log.info('Reset {} for portlet {} assigned at {} in {}'.format(attr, key, obj.absolute_url(), manager_name))  # noqa: E501
                     log.info('You may need to configure it manually at {}/@@manage-portlets'.format(obj.absolute_url()))  # noqa: E501
+
+
+def fix_discussions(context=None):
+    """Fix conversations that still have the old AT content as __parent__"""
+    portal = api.portal.get()
+    log.info('Fixing conversations...')
+
+    def fix_at_parent_for_discussions(obj, path):
+        annotations = IAnnotations(obj, None)
+        if not annotations:
+            return
+        if 'plone.app.discussion:conversation' not in annotations.keys():
+            return
+        conversation = annotations['plone.app.discussion:conversation']
+        if 'broken' in str(conversation.__parent__):
+            conversation.__parent__ = obj
+            log.info(f'Fix conversation for {obj.absolute_url()}')
+        else:
+            log.info(f'Conversation parent ok: {conversation.__parent__}')
+
+    portal.ZopeFindAndApply(
+        portal, search_sub=True, apply_func=fix_at_parent_for_discussions
+    )
+    log.info('Fixed conversations!')
 
 
 def rebuild_relations(context=None):

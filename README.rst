@@ -202,6 +202,9 @@ fix_searchable_text
 fix_portlets
     Fix portlets that use a ComputedValue for path-storage instead of a UUID
 
+fix_discussions
+    Fix conversations that still have the old AT content as `__parent__`
+
 rebuild_relations
     Exports all valid reations from the relation-catalog, purges the relation-catalog
     (and the intid-catalog) and restores all valid relations.
