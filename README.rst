@@ -205,6 +205,9 @@ fix_portlets
 fix_discussions
     Fix conversations that still have the old AT content as `__parent__`
 
+fix_registry
+    Remove registry-records where the interface is no longer there.
+
 rebuild_relations
     Exports all valid reations from the relation-catalog, purges the relation-catalog
     (and the intid-catalog) and restores all valid relations.

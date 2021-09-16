@@ -4,7 +4,9 @@ from logging import getLogger
 from plone import api
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import IPortletManager
+from plone.registry.interfaces import IRegistry
 from zope.annotation.interfaces import IAnnotations
+from zope.component import getUtility
 from zope.component import queryMultiAdapter
 from zope.component import queryUtility
 from zope.globalrequest import getRequest
@@ -111,6 +113,25 @@ def fix_discussions(context=None):
         portal, search_sub=True, apply_func=fix_at_parent_for_discussions
     )
     log.info('Fixed conversations!')
+
+
+def fix_registry(context=None):
+    """Remove registry-records where the interface is no longer there."""
+    registry = getUtility(IRegistry)
+    keys = [i for i in registry.records.keys()]
+    for key in keys:
+        record = registry.records[key]
+        if not record.field.interface:
+            # That's fine...
+            continue
+        try:
+            iface = record.field.interface()
+        except TypeError:
+            # That's also fine...
+            continue
+        if 'broken' in str(iface):
+            logger.info(f'Removing broken record {key}')
+            del registry.records[key]
 
 
 def rebuild_relations(context=None):
