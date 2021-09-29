@@ -43,7 +43,7 @@ def image_scale_fixer(text, obj):
     for img in soup.find_all('img'):
         src = img['src']
         if src.startswith('http'):
-            log.info('Skip external image {} used in {}'.format(src, obj.absolute_url()))
+            log.info(u'Skip external image {} used in {}'.format(src, obj.absolute_url()))
             continue
 
         for old, new in IMAGE_SCALE_MAP.items():
@@ -75,7 +75,7 @@ def image_scale_fixer(text, obj):
             uuid = src.split('resolveuid/')[1].split('/')[0]
             img['data-val'] = uuid
         else:
-            log.info('Image-link without resolveuid in {}: {}'.format(obj.absolute_url(), src))
+            log.info(u'Image-link without resolveuid in {}: {}'.format(obj.absolute_url(), src))
 
     return soup.decode()
 
@@ -117,11 +117,11 @@ def fix_at_image_scales(context=None):
                     encoding=text.encoding
                 ))
                 changed = True
-                log.info('Text cleanup in field {0} for {1}'.format(
+                log.info(u'Text cleanup in field {0} for {1}'.format(
                     name, '/'.join(obj.getPhysicalPath())
                 ))
         if changed:
             obj.reindexObject(idxs=('SearchableText', ))
-            log.info('Text cleanup for {0}'.format(
+            log.info(u'Text cleanup for {0}'.format(
                 '/'.join(obj.getPhysicalPath())
             ))
