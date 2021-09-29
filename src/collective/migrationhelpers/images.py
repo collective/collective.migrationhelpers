@@ -69,7 +69,7 @@ def image_scale_fixer(text, obj):
 
         img['src'] = src
         img['data-linktype'] = 'image'
-        img['class'] = img['class']['image-richtext']
+        img['class'] = img.get("class", []) + ['image-richtext']
 
         if 'resolveuid' in src:
             uuid = src.split('resolveuid/')[1].split('/')[0]
