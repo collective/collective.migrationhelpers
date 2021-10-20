@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+  <head>
+  </head>
+  <body>
+
+<metal:override fill-slot="top_slot"
+    tal:define="disable_column_one python:request.set('disable_plone.leftcolumn',1);
+                disable_column_two python:request.set('disable_plone.rightcolumn',1);"/>
+
+<div metal:fill-slot="main">
+    <tal:main-macro metal:define-macro="main">
+      <h1 i18n:translate="title_fix_links">
+        Fix links
+      </h1>
+      <p i18n:translate="msg_fix_links">
+        Find all relative and broken resolveuid links (absolute href
+        containing '/resolveuid/', most probably caused by Internet Explorer)
+        and try to create working resolveuid links out of them. Report relative
+        links that can not be resolved.
+      </p>
+      <form method="post">
+        <div class="field">
+          <input type="checkbox" checked="checked" name="fix_relative" id="fix_relative" />
+          <label for="fix_relative">
+            Convert relative links into resolveuid links
+          </label>
+        </div>
+        <div class="field">
+          <input type="checkbox" checked="checked" name="fix_resolveuid" id="fix_resolveuid" />
+          <label for="fix_resolveuid">
+            Sanitize existing resolveuid links. Notably: FCKeditor creates
+            resolveUid links with a capital U that breaks in TinyMCE, IE
+            sometimes generates absolute links /resolveuid/ .                     
+          </label>
+        </div>
+        <div class="field">
+          <input type="checkbox" checked="checked" name="fix_portlets" id="fix_portlets" />
+          <label for="fix_portlets">
+            Try to fix html code in portlets as well.                      
+          </label>
+        </div>
+
+        <div class="field">
+          <input type="checkbox" checked="checked" name="dry" id="dry" />
+          <label for="dry">
+            Dry run (don't actually fix anything).
+          </label>
+        </div>
+        <div class="field">
+          <textarea checked="checked" name="skip_links" id="skip_links" ></textarea>
+          <label for="skip_links">
+            Give a number of url parts (one per line) that should never be converted to resolveuid. Useful for links to non content. <b>Caveat:</b> This filter does not work for
+            relative links in a subfolder where you exclude the subfolder but the link does not contain its name.
+          </label>
+        </div>
+        <div>
+          <input type="submit" name="submit" value="submit"
+                 i18n:domain="plone" i18n:attributes="value" />
+        </div>
+
+      </form>
+      
+    </tal:main-macro>
+</div>
+
+</html>

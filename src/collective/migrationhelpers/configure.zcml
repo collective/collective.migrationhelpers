@@ -53,4 +53,10 @@
       permission="cmf.ManagePortal"
       />
 
+  <browser:page
+      for="*"
+      name="uidfixer"
+      class=".uidfixer.UIDFixerView"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>

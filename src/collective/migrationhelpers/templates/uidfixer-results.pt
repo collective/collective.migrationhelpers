@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="knmp.im">
+  <head>
+    <metal:css fill-slot="css_slot">
+      <style type="text/css">
+
+        #uidfixer-results li {
+          list-style-type: none;
+        }
+
+        #uidfixer-results a.unresolved {
+          color: red;
+        }
+
+      </style>
+    </metal:css>
+  </head>
+
+<metal:override fill-slot="top_slot"
+    tal:define="disable_column_one python:request.set('disable_plone.leftcolumn',1);
+                disable_column_two python:request.set('disable_plone.rightcolumn',1);"/>
+
+
+<div metal:fill-slot="main">
+    <tal:main-macro metal:define-macro="main">
+
+      <h1 i18n:translate="title_fix_links">
+        Results
+      </h1>
+      <div tal:define="results view/results" id="uidfixer-results">
+        <table border="1" style="font-size: 10px">
+          <thead>
+            <tr>
+              <th>URL of document containing link</th>
+              <th>field</th>
+              <th>link href</th>
+              <th>found target url</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tal:block repeat="result results">
+              <tr>
+                <td style="white-space: nowrap">
+                  <a tal:attributes="href result/object/absolute_url; class python:result['resolved'] and 'resolved' or 'unresolved'; style python:result['resolved'] and 'color: blue' or 'color: red'" tal:content="python: '...' + result['object'].absolute_url()[-80:]"></a>
+                </td>
+                <td>
+                  <strong tal:content="result/field|nothing"></strong>
+                </td>
+                <td style="white-space: nowrap">
+                  <em tal:content="result/href"></em>
+                </td>
+                <td style="white-space: nowrap">
+                  <a tal:attributes="href result/resolved_url" tal:content="result/resolved_url" tal:condition="result/resolved_url"></a>
+                  <em tal:condition="not:result/resolved_url">not resolved</em>
+                </td>
+              </tr>
+            </tal:block>
+          </tbody>
+        </table>
+        <strong>Total:</strong> <em tal:content="python:len(results)"></em>
+        <strong>Broken:</strong> <em tal:content="python:len([r for r in results if not r['resolved']])"></em>
+      </div>
+
+    </tal:main-macro>
+</div>
+
+</html>

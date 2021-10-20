@@ -8,6 +8,7 @@ They are mostly meant to copy & paste the code from here to your own packages.
 
 This was written for the talk "Migrations! Migrations! Migrations!" at Plone Conference 2019 in Ferrara: https://2019.ploneconf.org/talks/migrations-migrations-migrations
 
+Afterwards other helpers & contributions were done, also to support correction migrations done with collective.exportimport.
 
 Here is a list of methods this package contains:
 
@@ -259,6 +260,26 @@ rebuild_catalog_without_indexing_blobs
 
 pack_database
     Pack the database
+
+`uidfixer.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/uidfixer.py>`_
+--------
+
+This code has a browser view that allows you to replace all occurrences of relative
+links to their resolveuid versions in Plone 5.2+. Before Plone 5 using resolveuid links was optional
+and a setting in the TinyMCE control panel to use either.  ../resolveuid/*UUID* links are automatically
+transformed to a relative part on output, so that the link can never break. 
+
+With Plone 5.2/Plone6.0 with classic frontend the option to stick to relative links is gone
+and resolveuid links are required to be able to edit links and images in the TinyMCE modals
+for links and images. Also images now require an extra data-val attribute containing the same UUID.
+
+The code from this uidfixer originates from pareto.uidfixer and was initially written by Guido Wesdorp.
+We (Zest, Fred van Dijk) adapted the code for our own use in a Plone 4 AT->DX migration around 2015, which
+can be found at https://github.com/zestsoftware/pareto.uidfixer. This version was still assuming
+AT richtextfields as input and Python2. The current version contributed to collective.migrationhelpers
+was rewritten in 2021 to run with Python 3 and work directly on the already imported Dexterity
+content that was migrated using collective.exportimport.
+
 
 
 profiles/migration
