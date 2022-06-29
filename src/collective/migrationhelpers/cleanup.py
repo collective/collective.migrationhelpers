@@ -92,6 +92,7 @@ def trim_content(
         # delete objects, we may run into a KeyError getting the next brain.
         # Okay, this does not help in my case, but seems good anyway.
         brains = list(brains)[:amount_to_delete]
+        index = 0
         for index, brain in enumerate(brains):
             if brain.is_folderish and portal_type not in folderish_types_to_delete:
                 log.info(u'Not deleting folderish type {}!'.format(portal_type))
