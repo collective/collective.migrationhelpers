@@ -8,9 +8,7 @@ They are mostly meant to copy & paste the code from here to your own packages.
 
 This was written for the talk "Migrations! Migrations! Migrations!" at Plone Conference 2019 in Ferrara: https://2019.ploneconf.org/talks/migrations-migrations-migrations
 
-
 Here is a list of methods this package contains:
-
 
 `statistics.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/statistics.py>`_
 -------------
@@ -19,17 +17,16 @@ Browser-Views to get information about the portal:
 
 
 migrations_stats
-    Get info about the content is in the portal.
+    Get info about the content is in the portal
 
 migrations_contentsize
     How many MB of which content is there really?
 
 migrations_obsoleteinfo
-    Get info about content-types that may needs to be replaced
+    Get info about content types that may needs to be replaced
 
 migrations_localroles
-    Export info about local roles. A alternative would be zopyx.plone.cassandra
-
+    Export info about local roles. An alternative would be zopyx.plone.cassandra
 
 
 `prepare.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/prepare.py>`_
@@ -44,16 +41,16 @@ disable_ldap
     Disable ldap/ad-plugins
 
 remove_overrides
-    Remove any portal_skin an portal_view_customization overrides.
+    Remove any portal_skin an portal_view_customization overrides
 
 release_all_webdav_locks
-    Release all WebDAV Locks.
+    Release all WebDAV Locks
 
 
 `cleanup.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/cleanup.py>`_
 ----------
 
-Fremove obsolete content and settings
+Rremove obsolete content and settings
 
 delete_items_larger_than_1mb
     Deletes heavy content
@@ -155,13 +152,13 @@ migrate_helpcenter_to_dx
     Run the whole miration
 
 change_phc_layouts
-    Remove custom layout.
+    Remove custom layout
 
 appending_richtext_migrator
-    Example custom field-migrator that appends text to a existing richtext-field.
+    Example custom field-migrator that appends text to a existing richtext-field
 
 appending_text_migrator
-    Example custom field-migrator that appends text to a existing text-field.
+    Example custom field-migrator that appends text to a existing text-field
 
 migrate_helpcenter_xxx
     Some Methods that migrate the various types in PHC
@@ -172,7 +169,6 @@ migrate_helpcenter_xxx
 
 remove_archetypes
     Uninstall Archetypes and remove all of its traces.
-
 
 
 `patches.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/patches.py>`_
@@ -186,8 +182,7 @@ Multiple examples of patches using alias_module to deal with migration-problems.
 
 fix_at_image_scales
     Fix/Migrate custom images/scales and broken links to AT-based images.
-    This only finds content with the rich text behavior, so not all rich text fields.
-
+    This only finds content with the rich text behavior, so not all rich text fields
 
 
 `post_python3_fixes.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/post_python3_fixes.py>`_
@@ -206,7 +201,7 @@ fix_discussions
     Fix conversations that still have the old AT content as `__parent__`
 
 fix_registry
-    Remove registry-records where the interface is no longer there.
+    Remove registry-records where the interface is no longer there
 
 rebuild_relations
     Exports all valid reations from the relation-catalog, purges the relation-catalog
