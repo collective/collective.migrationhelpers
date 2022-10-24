@@ -50,7 +50,7 @@ release_all_webdav_locks
 `cleanup.py <https://github.com/collective/collective.migrationhelpers/blob/master/src/collective/migrationhelpers/cleanup.py>`_
 ----------
 
-Rremove obsolete content and settings
+Remove obsolete content and settings
 
 delete_items_larger_than_1mb
     Deletes heavy content
