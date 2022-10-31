@@ -40,6 +40,18 @@ disable_solr
 disable_ldap
     Disable ldap/ad-plugins
 
+disable_caching
+    Disable caching and purging
+
+enable_caching
+    Enable caching and purging again after migration
+
+disable_fingerpointing
+    Disable the fingerpointing plugin
+
+enable_fingerpointing
+    Enable the fingerpointing plugin again after migration
+
 remove_overrides
     Remove any portal_skin an portal_view_customization overrides
 
@@ -97,7 +109,7 @@ Some examples that remove various adapters, subscriber and utilities.
 For example:
 
 remove_utility:
-    Remove an interface from all utility registrations.
+    Remove an interface from all utility and adapter registrations.
     There are several places where an interface like IKSSRegistry can have lodged itself.
     We need to find them all, otherwise you are not even able to see
     the ZMI when going to Plone 5.2.

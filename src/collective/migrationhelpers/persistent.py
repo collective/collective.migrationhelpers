@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 
 def remove_utility(iface):
-    """Remove an interface from all utility registrations.
+    """Remove an interface from all utility and adapter registrations.
 
     There are several places where an interface like IKSSRegistry can have lodged itself.
     We need to find them all, otherwise you are not even able to see
@@ -17,31 +17,39 @@ def remove_utility(iface):
     portal = api.portal.get()
     sm = portal.getSiteManager()
 
-    subscribers = sm.utilities._subscribers[0]
-    if iface in subscribers:
-        del subscribers[iface]
-        log.info(u'Unregistering subscriber for %s', iface)
+    for component in (sm.utilities, sm.adapters):
+        subscribers = component._subscribers
+        if subscribers:
+            subscribers = subscribers[0]
+            if iface in subscribers:
+                del subscribers[iface]
+                logging.info(u'Unregistering subscriber for %s', iface)
 
-    adapters = sm.utilities._adapters[0]
-    if iface in adapters:
-        del adapters[iface]
-        log.info(u'Unregistering adapter for %s', iface)
+        adapters = component._adapters
+        if adapters:
+            adapters = adapters[0]
+            if iface in adapters:
+                del adapters[iface]
+                logging.info(u'Unregistering adapter for %s', iface)
 
-    provided = sm.utilities._provided
-    if iface in provided:
-        del provided[iface]
-        log.info(u'Unregistering provided for %s', iface)
+        provided = component._provided
+        if iface in provided:
+            del provided[iface]
+            logging.info(u'Unregistering provided for %s', iface)
 
-    regs = sm._utility_registrations
-    reg_keys = regs.keys()
-    for reg_key in reg_keys:
-        # registration key is (interface, name)
-        # Note that the interface can probably be there under several names.
-        if iface is reg_key[0]:
-            del regs[reg_key]
-            log.info(u'Unregistering utility registration for %s', reg_key)
+        # Mark the component as changed, even when maybe there was no change.
+        # There is no harm in a technically unneeded persistent change here.
+        component._p_changed = True
 
-    sm.utilities._p_changed = True
+    for registrations in (sm._utility_registrations, sm._adapter_registrations):
+        reg_keys = registrations.keys()
+        for reg_key in reg_keys:
+            # registration key is (interface, name)
+            # Note that the interface can probably be there under several names.
+            if iface is reg_key[0]:
+                del registrations[reg_key]
+                logging.info(u'Unregistering registration for %s', reg_key)
+
     transaction.commit()
 
 
