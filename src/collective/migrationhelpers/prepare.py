@@ -36,6 +36,77 @@ def disable_ldap(context=None):
             log.info('ldap-plugin {} not found'.format(ldap_plugin))
 
 
+def disable_caching(context=None):
+    """Disable caching and purging.
+
+    Especially purging is not useful during a large upgrade:
+    you will only swamp the purge queue.
+
+    After the the upgrade, you can call its counter part: enable_caching.
+    """
+    for name in (
+        "plone.caching.interfaces.ICacheSettings.enabled",
+        "plone.cachepurging.interfaces.ICachePurgingSettings.enabled",
+    ):
+        if api.portal.get_registry_record(name, default=False):
+            api.portal.set_registry_record(name, False)
+            log.info("Switched off %s", name)
+
+
+def enable_caching(context):
+    """Enable caching and purging."""
+    portal = api.portal.get()
+    portal_url = portal.absolute_url()
+    if "http://localhost" in portal_url or "http://127.0.0.1" in portal_url:
+        log.info("Not enabling caching and purging on localhost.")
+        return
+    for name in (
+        "plone.caching.interfaces.ICacheSettings.enabled",
+        "plone.cachepurging.interfaces.ICachePurgingSettings.enabled",
+    ):
+        if not api.portal.get_registry_record(name, default=False):
+            api.portal.set_registry_record(name, True)
+            log.info("Turned on %s", name)
+
+
+def disable_fingerpointing(context=None):
+    """During big upgrades, fingerpointing is mostly useless, so switch it off.
+
+    After the the upgrade, you can call its counter part: enable_fingerpointing.
+    """
+    from collective.fingerpointing.interfaces import IFingerPointingSettings
+
+    base_name = IFingerPointingSettings.__identifier__
+    for event in ["audit_pas", "audit_lifecycle", "audit_workflow", "audit_profile_imports", "audit_registry", "audit_iterate"]:
+        name = ".".join([base_name, event])
+        if api.portal.get_registry_record(name, default=False):
+            api.portal.set_registry_record(name, False)
+            log.info("Switched off %s", name)
+
+
+def enable_fingerpointing(context=None):
+    """After big upgrade is done, fingerpointing is welcome again.
+
+    The list of events is hardcoded.
+    Please check yourself which ones you want to re-enable.
+    """
+    from collective.fingerpointing.interfaces import IFingerPointingSettings
+
+    base_name = IFingerPointingSettings.__identifier__
+    for event in [
+        "audit_pas",
+        "audit_lifecycle",
+        "audit_workflow",
+        "audit_profile_imports",
+        "audit_registry",
+        "audit_iterate",
+    ]:
+        name = ".".join([base_name, event])
+        if not api.portal.get_registry_record(name, default=False):
+            api.portal.set_registry_record(name, True)
+            log.info("Switched on %s", name)
+
+
 def remove_overrides(context=None):
     log.info('removing portal_skins overrides')
     portal_skins = api.portal.get_tool('portal_skins')

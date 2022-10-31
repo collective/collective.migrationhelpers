@@ -40,6 +40,18 @@ disable_solr
 disable_ldap
     Disable ldap/ad-plugins
 
+disable_caching
+    Disable caching and purging
+
+enable_caching
+    Enable caching and purging again after migration
+
+disable_fingerpointing
+    Disable the fingerpointing plugin
+
+enable_fingerpointing
+    Enable the fingerpointing plugin again after migration
+
 remove_overrides
     Remove any portal_skin an portal_view_customization overrides
 
