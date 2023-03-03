@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from ComputedAttribute import ComputedAttribute
-from logging import getLogger
 from plone import api
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import IPortletManager
 from plone.registry.interfaces import IRegistry
+from Products.ZCatalog.ProgressHandler import ZLogHandler
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
@@ -23,18 +23,21 @@ def fix_event_indexes(context=None):
         obj.reindexObject()
 
 
-def fix_searchable_text(context=None):
+def fix_searchable_text(context=None, name='portal_catalog'):
     # Fix bytes in opkapiindex
     # See https://github.com/plone/Products.CMFPlone/issues/2905
     from Products.ZCTextIndex.interfaces import IZCTextIndex
     from Products.ZCTextIndex.interfaces import ILexicon
-    catalog = api.portal.get_tool('portal_catalog')
+    catalog = api.portal.get_tool(name)
     zctextindex = catalog._catalog.indexes['SearchableText']
     opkapiindex = zctextindex.index
     values = opkapiindex._docwords.values()
-    first_item = values[0]
-    if isinstance(first_item, bytes):
-        log.info('Rebuilding ZCTextIndexes. First item is a byte:')
+    if len(values):
+        first_item = values[0]
+    else:
+        first_item = None
+    if first_item is None or isinstance(first_item, bytes):
+        log.info('Rebuilding ZCTextIndexes. First item is a byte or mising:')
         log.info(first_item)
         lexica = [i for i in catalog.values() if ILexicon.providedBy(i)]
         for lexicon in lexica:
@@ -47,8 +50,15 @@ def fix_searchable_text(context=None):
                 index.clear()
             except AttributeError as e:
                 log.info(e)
-            log.info('rebuilding {}'.format(index.__name__))
-            catalog._catalog.reindexIndex(index.__name__, getRequest())
+            # If we have an unknown lexicon use the most recently added one
+            lex_id = getattr(index, 'lexicon_id', None)
+            if len(lexica) and lex_id and lex_id not in catalog.objectIds():
+                new_lex_id = lexica[-1].getId()
+                log.warn(f'Replacing bad lexicon {lex_id} with {new_lex_id} in {index.__name__}')
+                index.lexicon_id = new_lex_id
+        index_names = [index.__name__ for index in indexes]
+        log.info('rebuilding indexes: {}'.format(', '.join(index_names)))
+        catalog.reindexIndex(index_names, getRequest(), pghandler=ZLogHandler(1000))
     else:
         log.info('Not rebuilding ZCTextIndexes. First item is not bytes:')
         log.info(first_item)
@@ -69,14 +79,16 @@ def fix_portlets(context=None):
         fix_portlets_for(obj)
 
 
-def fix_portlets_for(obj):
+def fix_portlets_for(obj, managers=('plone.leftcolumn',
+                                    'plone.rightcolumn',
+                                    'plone.footerportlets')):
     """Fix portlets for a certain object."""
     attrs_to_fix = [
         'root_uid',
         'search_base_uid',
         'uid',
     ]
-    for manager_name in ['plone.leftcolumn', 'plone.rightcolumn', 'plone.footerportlets']:
+    for manager_name in managers:
         manager = queryUtility(IPortletManager, name=manager_name, context=obj)
         if not manager:
             continue
@@ -130,7 +142,7 @@ def fix_registry(context=None):
             # That's also fine...
             continue
         if 'broken' in str(iface):
-            logger.info(f'Removing broken record {key}')
+            log.info(f'Removing broken record {key}')
             del registry.records[key]
 
 
