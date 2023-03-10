@@ -52,7 +52,7 @@ def fix_searchable_text(context=None, name='portal_catalog'):
                 log.info(e)
             # If we have an unknown lexicon use the most recently added one
             lex_id = getattr(index, 'lexicon_id', None)
-            if len(lexica) and lex_id and lex_id not in catalog.objectIds():
+            if lex_id and len(lexica) and getattr(catalog, lex_id, None) is None:
                 new_lex_id = lexica[-1].getId()
                 log.warn(f'Replacing bad lexicon {lex_id} with {new_lex_id} in {index.__name__}')
                 index.lexicon_id = new_lex_id
