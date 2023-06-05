@@ -55,6 +55,7 @@ setup(
         # -*- Extra requirements: -*-
         'plone.api',
         'beautifulsoup4',
+        'collective.relationhelpers',
     ],
     extras_require={
     },
